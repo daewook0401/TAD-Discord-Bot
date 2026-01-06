@@ -1,4 +1,4 @@
-const { Events } = require('discord.js');
+const { Events, ActivityType } = require('discord.js');
 
 module.exports = {
   name: Events.ClientReady,
@@ -8,6 +8,6 @@ module.exports = {
     console.log(`[INFO] Serving ${client.guilds.cache.size} guild(s)`);
     
     // Set bot status
-    client.user.setActivity('party commands | /help', { type: 'WATCHING' });
+    client.user.setActivity('party commands | /help', { type: ActivityType.Watching });
   },
 };

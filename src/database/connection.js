@@ -32,7 +32,7 @@ function connect(callback) {
 /**
  * Initialize database tables
  */
-function initializeTables(callback) {
+async function initializeTables(callback) {
   const createPartiesTable = `
     CREATE TABLE IF NOT EXISTS parties (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -73,18 +73,14 @@ function initializeTables(callback) {
     )
   `;
 
-  pool.query(createPartiesTable, (err) => {
-    if (err) return callback(err);
-    
-    pool.query(createPartyMembersTable, (err) => {
-      if (err) return callback(err);
-      
-      pool.query(createNotificationsTable, (err) => {
-        if (err) return callback(err);
-        callback(null);
-      });
-    });
-  });
+  try {
+    await promisePool.execute(createPartiesTable);
+    await promisePool.execute(createPartyMembersTable);
+    await promisePool.execute(createNotificationsTable);
+    callback(null);
+  } catch (error) {
+    callback(error);
+  }
 }
 
 /**

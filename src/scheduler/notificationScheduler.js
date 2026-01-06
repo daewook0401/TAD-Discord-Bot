@@ -5,6 +5,11 @@ const { EmbedBuilder } = require('discord.js');
 /**
  * Start the notification scheduler
  * Runs every minute to check for pending notifications
+ * 
+ * Note: For high-load scenarios with many parties, consider:
+ * - Using a longer interval (e.g., every 5 minutes)
+ * - Implementing a more targeted query with time ranges
+ * - Using a dedicated job queue system (Bull, Agenda, etc.)
  */
 function start(client) {
   console.log('[INFO] Starting notification scheduler...');
