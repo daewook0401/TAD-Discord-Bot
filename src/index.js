@@ -49,23 +49,29 @@ for (const file of eventFiles) {
   console.log(`[INFO] Loaded event: ${event.name}`);
 }
 
-// Initialize database connection
-database.connect((err) => {
-  if (err) {
-    console.error('[ERROR] Failed to connect to database:', err);
+// Initialize database connection and tables
+(async () => {
+  try {
+    await new Promise((resolve, reject) => {
+      database.connect((err) => {
+        if (err) reject(err);
+        else resolve();
+      });
+    });
+    console.log('[INFO] Connected to MySQL database');
+    
+    await new Promise((resolve, reject) => {
+      database.initializeTables((err) => {
+        if (err) reject(err);
+        else resolve();
+      });
+    });
+    console.log('[INFO] Database tables initialized');
+  } catch (err) {
+    console.error('[ERROR] Failed to initialize database:', err);
     process.exit(1);
   }
-  console.log('[INFO] Connected to MySQL database');
-  
-  // Initialize database tables
-  database.initializeTables((err) => {
-    if (err) {
-      console.error('[ERROR] Failed to initialize database tables:', err);
-      process.exit(1);
-    }
-    console.log('[INFO] Database tables initialized');
-  });
-});
+})();
 
 // Start notification scheduler
 scheduler.start(client);

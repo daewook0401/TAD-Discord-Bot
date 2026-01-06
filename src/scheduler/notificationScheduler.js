@@ -69,6 +69,13 @@ async function sendPartyNotification(client, notification) {
     
     // Get party members to mention
     const members = await partyOps.getPartyMembers(notification.party_id);
+    
+    // Skip if no members to notify
+    if (members.length === 0) {
+      console.log(`[INFO] No members to notify for party: ${notification.party_name}`);
+      return;
+    }
+    
     const memberMentions = members.map(m => `<@${m.user_id}>`).join(' ');
     
     const scheduledTime = new Date(notification.scheduled_time);
@@ -87,7 +94,7 @@ async function sendPartyNotification(client, notification) {
       .setFooter({ text: 'Get ready to party!' });
     
     await channel.send({
-      content: memberMentions || 'Party notification!',
+      content: memberMentions,
       embeds: [embed]
     });
     

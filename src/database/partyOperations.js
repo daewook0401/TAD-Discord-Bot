@@ -126,7 +126,7 @@ async function getPendingNotifications() {
     WHERE n.sent = FALSE AND n.notification_time <= NOW()
   `;
   
-  return await db.query(sql, []);
+  return await db.query(sql);
 }
 
 /**
